@@ -1,0 +1,16 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:1": {
+			"installZsh": "true",
+			"username": "rstudio",
+			"uid": "1000",
+			"gid": "1000",
+			"upgradePackages": "true"
+		}
+	},
+	"remoteUser": "rstudio"
+}
