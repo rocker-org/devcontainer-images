@@ -1,0 +1,20 @@
+{
+	"image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-18",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"EditorConfig.EditorConfig",
+				"ms-vscode.makefile-tools"
+			],
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh"
+			}
+		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {}
+	},
+	"remoteUser": "node",
+	"postCreateCommand": "npm install -g @devcontainers/cli"
+}
