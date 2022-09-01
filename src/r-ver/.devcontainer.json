@@ -1,7 +1,11 @@
 {
 	"build": {
 		"dockerfile": "Dockerfile",
-		"context": "."
+		"context": ".",
+		"args": {
+			"VARIANT": "4",
+			"BASE_IMAGE": "rocker/r-ver"
+		}
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:1": {
@@ -12,5 +16,20 @@
 			"upgradePackages": "true"
 		}
 	},
-	"remoteUser": "rstudio"
+	"remoteUser": "rstudio",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"reditorsupport.r"
+			],
+			"settings": {
+				"r.rterm.linux": "/usr/local/bin/radian",
+				"r.bracketedPaste": true,
+				"r.plot.useHttpgd": true,
+				"[r]": {
+					"editor.wordSeparators": "`~!@#%$^&*()-=+[{]}\\|;:'\",<>/?"
+				}
+			}
+		}
+	}
 }
