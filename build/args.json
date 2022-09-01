@@ -1,0 +1,38 @@
+{
+	"r-ver": {
+		"base-image": "rocker/r-ver",
+		"versions": {
+			"4.2": {
+				"variant": "4.2",
+				"tags": [
+					"ghcr.io/eitsupi/devcontainer/r-ver:4.2",
+					"ghcr.io/eitsupi/devcontainer/r-ver:4"
+				]
+			},
+			"4.1": {
+				"variant": "4.1",
+				"tags": [
+					"ghcr.io/eitsupi/devcontainer/r-ver:4.1"
+				]
+			}
+		}
+	},
+	"tidyverse": {
+		"base-image": "rocker/tidyverse",
+		"versions": {
+			"4.2": {
+				"variant": "4.2",
+				"tags": [
+					"ghcr.io/eitsupi/devcontainer/tidyverse:4.2",
+					"ghcr.io/eitsupi/devcontainer/tidyverse:4"
+				]
+			},
+			"4.1": {
+				"variant": "4.1",
+				"tags": [
+					"ghcr.io/eitsupi/devcontainer/tidyverse:4.1"
+				]
+			}
+		}
+	}
+}
