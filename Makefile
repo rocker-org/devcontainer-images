@@ -18,6 +18,6 @@ $(WORK_DIR)/.devcontainer.json: src/$(SRC_NAME)/.devcontainer.json $(ARG_JSON)
 	mkdir -p $(@D)
 	cat $< | jq '.build.args.VARIANT |= "$(VARIANT)" | .build.args.BASE_IMAGE |= "$(base_image)"' >$@
 
-$(WORK_DIR)/Dockerfile: src/$(SRC_NAME)/Dockerfile $(ARG_JSON)
+$(WORK_DIR)/Dockerfile: src/$(SRC_NAME)/Dockerfile
 	mkdir -p $(@D)
 	cp $< $@
