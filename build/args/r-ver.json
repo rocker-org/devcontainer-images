@@ -6,11 +6,19 @@
 				"tags": [
 					"ghcr.io/eitsupi/devcontainer/r-ver:4.2",
 					"ghcr.io/eitsupi/devcontainer/r-ver:4"
+				],
+				"platforms": [
+					"linux/amd64",
+					"linux/arm64"
 				]
 			},
 			"4.1": {
 				"tags": [
 					"ghcr.io/eitsupi/devcontainer/r-ver:4.1"
+				],
+				"platforms": [
+					"linux/amd64",
+					"linux/arm64"
 				]
 			}
 		}
@@ -22,11 +30,17 @@
 				"tags": [
 					"ghcr.io/eitsupi/devcontainer/tidyverse:4.2",
 					"ghcr.io/eitsupi/devcontainer/tidyverse:4"
+				],
+				"platforms": [
+					"linux/amd64"
 				]
 			},
 			"4.1": {
 				"tags": [
 					"ghcr.io/eitsupi/devcontainer/tidyverse:4.1"
+				],
+				"platforms": [
+					"linux/amd64"
 				]
 			}
 		}

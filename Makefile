@@ -10,6 +10,7 @@ WORK_DIR := work/$(IMAGE_NAME)/$(VARIANT)
 all: $(WORK_DIR)/.devcontainer.json $(WORK_DIR)/Dockerfile
 
 tags := $(shell jq '."$(IMAGE_NAME)"."variants"."$(VARIANT)"."tags"[]' -r $(ARG_JSON))
+platforms := $(shell jq '."$(IMAGE_NAME)"."variants"."$(VARIANT)"."platforms"[]' -r $(ARG_JSON))
 base_image := $(shell jq '."$(IMAGE_NAME)"."base-image"' -r $(ARG_JSON))
 
 image_name_ops := $(addprefix --image-name\ ,$(tags))
