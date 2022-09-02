@@ -1,7 +1,7 @@
 {
 	"r-ver": {
 		"base-image": "rocker/r-ver",
-		"versions": {
+		"variants": {
 			"4.2": {
 				"variant": "4.2",
 				"tags": [
@@ -19,7 +19,7 @@
 	},
 	"tidyverse": {
 		"base-image": "rocker/tidyverse",
-		"versions": {
+		"variants": {
 			"4.2": {
 				"variant": "4.2",
 				"tags": [
