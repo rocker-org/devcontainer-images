@@ -11,5 +11,5 @@ Heavily under development.
 Build the container with the make command.
 
 ```sh
-SRC_NAME=r-ver SRC_NAME=tidyverse VARIANT=4.2 DEVCON_BUILD_OPTION=--push make devcontainer
+SRC_NAME=r-ver IMAGE_NAME=tidyverse VARIANT=4.2 DEVCON_BUILD_OPTION=--push make devcontainer
 ```
