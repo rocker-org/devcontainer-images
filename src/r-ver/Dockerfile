@@ -2,6 +2,8 @@ ARG VARIANT=4
 ARG BASE_IMAGE=rocker/r-ver
 FROM ${BASE_IMAGE}:${VARIANT}
 
+LABEL org.opencontainers.image.base.name="${BASE_IMAGE}:${VARIANT}"
+
 RUN /rocker_scripts/default_user.sh \
     && apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install \
