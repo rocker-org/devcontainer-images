@@ -1,0 +1,12 @@
+{
+	"include":[
+		{
+			"image_name": "r-ver",
+			"variant": "4.2"
+		},
+		{
+			"image_name": "tidyverse",
+			"variant": "4.2"
+		}
+	]
+}

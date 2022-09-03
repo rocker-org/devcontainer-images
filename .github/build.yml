@@ -1,0 +1,54 @@
+name: Build and push images
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  generate_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-json
+        run: |
+          jsonfile=build/matrix/r-ver.json
+          echo ::set-output name=json::${jsonfile}
+          echo ${jsonfile}
+      - id: set-matrix
+        run: |
+          jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
+          echo ::set-output name=matrix::"${jsoncontent}"
+          echo "${jsoncontent}"
+
+  build:
+    needs: generate_matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.generate_matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Set up devcontainer cli
+        run: npm install -g @devcontainers/cli
+      - name: Build and push Docker images
+        run: |
+          SRC_NAME=r-ver \
+          IMAGE_NAME=${{ matrix.image_name }} \
+          VARIANT=${{ matrix.variant }} \
+          DEVCON_BUILD_OPTION=--push \
+          make devcontainer
