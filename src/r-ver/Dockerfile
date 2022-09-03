@@ -12,6 +12,12 @@ RUN /rocker_scripts/default_user.sh \
         libssl-dev \
         libfontconfig1-dev \
         libcairo2-dev \
+        libharfbuzz-dev \
+        libfribidi-dev \
+        libfreetype6-dev \
+        libpng-dev \
+        libtiff5-dev \
+        libjpeg-dev \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
     && python3 -m pip --no-cache-dir install \
         radian \
