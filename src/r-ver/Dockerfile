@@ -11,7 +11,7 @@ RUN /rocker_scripts/default_user.sh \
         libssl-dev \
         libfontconfig1-dev \
         libcairo2-dev \
-    && apt-get autoremove -y && apt-get clean -y \
+    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
     && python3 -m pip --no-cache-dir install \
         radian \
     && install2.r --error --skipinstalled --ncpus -1 \
