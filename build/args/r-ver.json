@@ -1,6 +1,6 @@
 {
 	"r-ver": {
-		"base-image": "rocker/r-ver",
+		"base-image": "docker.io/rocker/r-ver",
 		"variants": {
 			"4.2": {
 				"tags": [
@@ -24,7 +24,7 @@
 		}
 	},
 	"tidyverse": {
-		"base-image": "rocker/tidyverse",
+		"base-image": "docker.io/rocker/tidyverse",
 		"variants": {
 			"4.2": {
 				"tags": [
