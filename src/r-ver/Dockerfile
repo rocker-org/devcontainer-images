@@ -6,6 +6,7 @@ RUN /rocker_scripts/default_user.sh \
     && apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install \
         python3-pip \
+        libgit2-dev \
         libcurl4-openssl-dev \
         libxml2-dev \
         libssl-dev \
@@ -15,7 +16,8 @@ RUN /rocker_scripts/default_user.sh \
     && python3 -m pip --no-cache-dir install \
         radian \
     && install2.r --error --skipinstalled --ncpus -1 \
-        languageserver \
+        devtools \
         httpgd \
+        languageserver \
     && rm -rf /tmp/downloaded_packages \
     && strip /usr/local/lib/R/site-library/*/libs/*.so
