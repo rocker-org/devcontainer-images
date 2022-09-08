@@ -19,10 +19,16 @@ PLATFORM ?= $(shell jq '."$(IMAGE_NAME)"."variants"."$(VARIANT)"."platforms" | j
 # ex. $ SRC_NAME=r-ver VARIANT=4.1 PLATFORM=linux/amd64 make devcontainer
 # ex. $ SRC_NAME=r-ver IMAGE_NAME=tidyverse VARIANT=4.2 DEVCON_BUILD_OPTION=--push make devcontainer
 IMAGE_NAME_OPS := $(addprefix --image-name ,$(TAGS))
+CACHE_FROM_OPS := $(addprefix --cache-from ,$(TAGS))
 DEVCON_BUILD_OPTION ?=
 .PHONY: devcontainer
 devcontainer: configfiles
-	devcontainer build --workspace-folder $(WORK_DIR) --platform $(PLATFORM) $(IMAGE_NAME_OPS) $(DEVCON_BUILD_OPTION)
+	devcontainer build \
+	--workspace-folder $(WORK_DIR) \
+	--platform $(PLATFORM) \
+	$(CACHE_FROM_OPS) \
+	$(IMAGE_NAME_OPS) \
+	$(DEVCON_BUILD_OPTION)
 
 $(WORK_DIR)/.devcontainer.json: src/$(SRC_NAME)/.devcontainer.json $(ARG_JSON)
 	mkdir -p $(@D)
