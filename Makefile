@@ -38,5 +38,10 @@ $(WORK_DIR)/Dockerfile: src/$(SRC_NAME)/Dockerfile
 	mkdir -p $(@D)
 	cp $< $@
 
+ASSETS := $(wildcard src/$(SRC_NAME)/assets/*)
+$(WORK_DIR)/assets: $(ASSETS)
+	mkdir -p $@
+	-cp src/$(SRC_NAME)/assets/* $@
+
 .PHONY: configfiles
-configfiles: $(WORK_DIR)/.devcontainer.json $(WORK_DIR)/Dockerfile
+configfiles: $(WORK_DIR)/.devcontainer.json $(WORK_DIR)/Dockerfile $(WORK_DIR)/assets
