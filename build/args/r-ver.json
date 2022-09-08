@@ -4,8 +4,8 @@
 		"variants": {
 			"4.2": {
 				"tags": [
-					"ghcr.io/eitsupi/devcontainer/r-ver:4.2",
-					"ghcr.io/eitsupi/devcontainer/r-ver:4"
+					"ghcr.io/rocker-org/devcontainer/r-ver:4.2",
+					"ghcr.io/rocker-org/devcontainer/r-ver:4"
 				],
 				"platforms": [
 					"linux/amd64",
@@ -14,7 +14,7 @@
 			},
 			"4.1": {
 				"tags": [
-					"ghcr.io/eitsupi/devcontainer/r-ver:4.1"
+					"ghcr.io/rocker-org/devcontainer/r-ver:4.1"
 				],
 				"platforms": [
 					"linux/amd64",
@@ -28,8 +28,8 @@
 		"variants": {
 			"4.2": {
 				"tags": [
-					"ghcr.io/eitsupi/devcontainer/tidyverse:4.2",
-					"ghcr.io/eitsupi/devcontainer/tidyverse:4"
+					"ghcr.io/rocker-org/devcontainer/tidyverse:4.2",
+					"ghcr.io/rocker-org/devcontainer/tidyverse:4"
 				],
 				"platforms": [
 					"linux/amd64"
@@ -37,7 +37,7 @@
 			},
 			"4.1": {
 				"tags": [
-					"ghcr.io/eitsupi/devcontainer/tidyverse:4.1"
+					"ghcr.io/rocker-org/devcontainer/tidyverse:4.1"
 				],
 				"platforms": [
 					"linux/amd64"
