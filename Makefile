@@ -45,3 +45,7 @@ $(WORK_DIR)/assets/%: src/$(SRC_NAME)/assets/%
 
 .PHONY: configfiles
 configfiles: $(WORK_DIR)/.devcontainer.json $(WORK_DIR)/Dockerfile $(addprefix $(WORK_DIR)/assets/,$(notdir $(ASSETS)))
+
+.PHONY: clean
+clean:
+	rm -rf work
