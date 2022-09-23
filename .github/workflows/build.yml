@@ -2,6 +2,20 @@ name: Build and push images
 
 on:
   workflow_dispatch:
+    inputs:
+      push:
+        type: boolean
+        description: push the devcontainer images?
+        required: true
+        default: false
+  pull_request:
+    branches:
+      - main
+    paths:
+      - src/**.devcontainer.json
+      - src/**Dockerfile
+      - src/**/assets/**
+      - "!**.md"
 
 concurrency:
   group: ${{ github.workflow }}
@@ -45,10 +59,19 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - name: Set up devcontainer cli
         run: npm install -g @devcontainers/cli
+      - name: Test build
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          PLATFORM=linux/amd64 \
+          SRC_NAME=r-ver \
+          IMAGE_NAME=${{ matrix.image_name }} \
+          VARIANT=${{ matrix.variant }} \
+          make devcontainer
       - name: Build and push Docker images
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           SRC_NAME=r-ver \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
-          DEVCON_BUILD_OPTION=--push \
+          DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
           make devcontainer
