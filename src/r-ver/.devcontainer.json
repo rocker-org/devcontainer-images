@@ -20,7 +20,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"reditorsupport.r"
+				"reditorsupport.r",
+				"RDebugger.r-debugger"
 			],
 			"settings": {
 				"r.rterm.linux": "/usr/local/bin/radian",

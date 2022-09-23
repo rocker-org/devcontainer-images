@@ -26,6 +26,7 @@ RUN /rocker_scripts/default_user.sh \
         httpgd \
         languageserver \
     && rm -rf /tmp/downloaded_packages \
-    && strip /usr/local/lib/R/site-library/*/libs/*.so
+    && strip /usr/local/lib/R/site-library/*/libs/*.so \
+    && R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger@*release", dependencies = FALSE)'
 
 COPY --chown=rstudio:rstudio assets/rstudio-prefs.json /home/rstudio/.config/rstudio/
