@@ -5,7 +5,8 @@
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"EditorConfig.EditorConfig",
-				"ms-vscode.makefile-tools"
+				"ms-vscode.makefile-tools",
+				"redhat.vscode-yaml"
 			],
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh"
