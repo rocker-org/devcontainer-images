@@ -14,6 +14,14 @@
 			"uid": "1000",
 			"gid": "1000",
 			"upgradePackages": "true"
+		},
+		"ghcr.io/rocker-org/devcontainer-features/r-rig:0": {
+			"version": "none",
+			"vscodeRSupport": "full",
+			"installDevTools": true,
+			"installRMarkdown": true,
+			"installRadian": true,
+			"installVscDebugger": true
 		}
 	},
 	"remoteUser": "rstudio",
