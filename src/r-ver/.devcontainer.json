@@ -25,6 +25,9 @@
 		},
 		"ghcr.io/devcontainers/features/node:1": "none"
 	},
+	"overrideFeatureInstallOrder":[
+		"ghcr.io/devcontainers/features/common-utils"
+	],
 	"remoteUser": "rstudio",
 	"customizations": {
 		"vscode": {
