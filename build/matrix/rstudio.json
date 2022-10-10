@@ -1,7 +1,7 @@
 {
 	"include":[
 		{
-			"image_name": "r-ver",
+			"image_name": "rstudio",
 			"variant": "4.2"
 		}
 	]

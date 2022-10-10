@@ -22,37 +22,74 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  generate_matrix:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            r-ver: ./**/r-ver/**
+            rstudio: ./**/rstudio/**
+
+  # generate-matrix:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     matrix: ${{ steps.set-matrix.outputs.matrix }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - id: set-json
+  #       run: |
+  #         jsonfile=build/matrix/r-ver.json
+  #         echo ::set-output name=json::${jsonfile}
+  #         echo ${jsonfile}
+  #     - id: set-matrix
+  #       run: |
+  #         jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
+  #         echo ::set-output name=matrix::"${jsoncontent}"
+  #         echo "${jsoncontent}"
+
+  generate-matrix-pr:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs:
+      - detect-changes
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      src_name: ${{ steps.set-matrix.outputs.src }}
+    strategy:
+      matrix:
+        src: ${{ fromJSON(needs.detect-changes.outputs.src) }}
     steps:
       - uses: actions/checkout@v3
       - id: set-json
         run: |
-          jsonfile=build/matrix/r-ver.json
+          jsonfile="build/matrix/${{ matrix.src }}.json"
           echo ::set-output name=json::${jsonfile}
           echo ${jsonfile}
       - id: set-matrix
         run: |
           jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
           echo ::set-output name=matrix::"${jsoncontent}"
-          echo "${jsoncontent}"
+          echo ::set-output name=src_name::"${matrix.src}"
 
-  build:
-    needs: generate_matrix
+  build-pr:
+    needs:
+      - generate-matrix-pr
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.generate_matrix.outputs.matrix)}}
+      matrix: ${{ fromJson(needs.generate-matrix-pr.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v3
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -63,15 +100,15 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         run: |
           PLATFORM=linux/amd64 \
-          SRC_NAME=r-ver \
+          SRC_NAME=${{ needs.generate-matrix-pr.outputs.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
           make devcontainer
-      - name: Build and push Docker images
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          SRC_NAME=r-ver \
-          IMAGE_NAME=${{ matrix.image_name }} \
-          VARIANT=${{ matrix.variant }} \
-          DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
-          make devcontainer
+      # - name: Build and push Docker images
+      #   if: ${{ github.event_name != 'pull_request' }}
+      #   run: |
+      #     SRC_NAME=r-ver \
+      #     IMAGE_NAME=${{ matrix.image_name }} \
+      #     VARIANT=${{ matrix.variant }} \
+      #     DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
+      #     make devcontainer
