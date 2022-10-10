@@ -34,7 +34,8 @@ $(WORK_DIR)/.devcontainer.json: src/$(SRC_NAME)/.devcontainer.json $(ARG_JSON)
 	mkdir -p $(@D)
 	cat $< | jq '.build.args.VARIANT |= "$(VARIANT)" | .build.args.BASE_IMAGE |= "$(BASE_IMAGE)"' >$@
 
-$(WORK_DIR)/Dockerfile: src/$(SRC_NAME)/Dockerfile
+DOCKERFILE := $(wildcard src/$(SRC_NAME)/Dockerfile)
+$(WORK_DIR)/Dockerfile: $(DOCKERFILE)
 	mkdir -p $(@D)
 	cp $< $@
 
@@ -44,7 +45,7 @@ $(WORK_DIR)/assets/%: src/$(SRC_NAME)/assets/%
 	cp $< $@
 
 .PHONY: configfiles
-configfiles: $(WORK_DIR)/.devcontainer.json $(WORK_DIR)/Dockerfile $(addprefix $(WORK_DIR)/assets/,$(notdir $(ASSETS)))
+configfiles: $(WORK_DIR)/.devcontainer.json $(addprefix $(WORK_DIR)/,$(notdir $(DOCKERFILE))) $(addprefix $(WORK_DIR)/assets/,$(notdir $(ASSETS)))
 
 .PHONY: clean
 clean:
