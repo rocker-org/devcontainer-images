@@ -22,7 +22,8 @@
 			"installRMarkdown": true,
 			"installRadian": true,
 			"installVscDebugger": true
-		}
+		},
+		"ghcr.io/devcontainers/features/node:1": "none"
 	},
 	"remoteUser": "rstudio",
 	"customizations": {
