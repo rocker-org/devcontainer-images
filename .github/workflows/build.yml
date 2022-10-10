@@ -73,7 +73,7 @@ jobs:
         run: |
           jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
           echo ::set-output name=matrix::"${jsoncontent}"
-          echo ::set-output name=src_name::"${matrix.src}"
+          echo ::set-output name=src_name::"${{ matrix.src }}"
 
   build-pr:
     needs:
