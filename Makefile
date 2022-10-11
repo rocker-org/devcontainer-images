@@ -1,19 +1,19 @@
 SHELL := /bin/bash
 
-SRC_NAME ?= $(shell ls src | head -n 1)
+SRC_NAME ?= $(shell ls src | tail -n 1)
 IMAGE_NAME ?= $(SRC_NAME)
-VARIANT ?= $(shell jq '.[].variants | keys | .[]' -r $(ARG_JSON) | head -n 1)
+VARIANT ?= $(shell jq '."$(SRC_NAME)"[].variants | keys | .[]' -r $(ARG_JSON) | head -n 1)
 
-ARG_JSON := build/args/$(SRC_NAME).json
+ARG_JSON := build/args.json
 WORK_DIR := work/$(IMAGE_NAME)/$(VARIANT)
 
 .PHONY: all
 all:
 
-BASE_IMAGE := $(shell jq '."$(IMAGE_NAME)"."base-image"' -r $(ARG_JSON))
+BASE_IMAGE := $(shell jq '."$(SRC_NAME)"."$(IMAGE_NAME)"."base-image"' -r $(ARG_JSON))
 
-TAGS ?= $(shell jq '."$(IMAGE_NAME)"."variants"."$(VARIANT)"."tags"[]' -r $(ARG_JSON))
-PLATFORM ?= $(shell jq '."$(IMAGE_NAME)"."variants"."$(VARIANT)"."platforms" | join(",")' -r $(ARG_JSON))
+TAGS ?= $(shell jq '."$(SRC_NAME)"."$(IMAGE_NAME)"."variants"."$(VARIANT)"."tags"[]' -r $(ARG_JSON))
+PLATFORM ?= $(shell jq '."$(SRC_NAME)"."$(IMAGE_NAME)"."variants"."$(VARIANT)"."platforms" | join(",")' -r $(ARG_JSON))
 
 # Use the `devcontainer build` command
 # ex. $ SRC_NAME=r-ver VARIANT=4.1 PLATFORM=linux/amd64 make devcontainer
