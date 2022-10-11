@@ -34,22 +34,23 @@ jobs:
             r-ver: ./**/r-ver/**
             rstudio: ./**/rstudio/**
 
-  # generate-matrix:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     matrix: ${{ steps.set-matrix.outputs.matrix }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - id: set-json
-  #       run: |
-  #         jsonfile=build/matrix/r-ver.json
-  #         echo ::set-output name=json::${jsonfile}
-  #         echo ${jsonfile}
-  #     - id: set-matrix
-  #       run: |
-  #         jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
-  #         echo ::set-output name=matrix::"${jsoncontent}"
-  #         echo "${jsoncontent}"
+  generate-matrix:
+    if: ${{ github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-json
+        run: |
+          jsonfile="build/matrix.json"
+          echo ::set-output name=json::${jsonfile}
+          echo ${jsonfile}
+      - id: set-matrix
+        run: |
+          jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
+          echo ::set-output name=matrix::"${jsoncontent}"
+          echo "${jsoncontent}"
 
   generate-matrix-pr:
     if: ${{ github.event_name == 'pull_request' }}
@@ -70,6 +71,7 @@ jobs:
           regex=$(echo '${{ needs.detect-changes.outputs.src }}' | jq '.|join("|")' -r)
           jsoncontent=$(jq -r '{ include: [ .include[] | select(.src_name | test("'${regex}'")) ] } | tostring' ${{ steps.set-json.outputs.json }})
           echo ::set-output name=matrix::"${jsoncontent}"
+          echo "${jsoncontent}"
 
   build-pr:
     needs:
@@ -80,16 +82,6 @@ jobs:
       matrix: ${{ fromJson(needs.generate-matrix-pr.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v3
-      # - name: Login to GitHub Container Registry
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
       - name: Set up devcontainer cli
         run: npm install -g @devcontainers/cli
       - name: Test build
@@ -100,11 +92,32 @@ jobs:
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
           make devcontainer
-      # - name: Build and push Docker images
-      #   if: ${{ github.event_name != 'pull_request' }}
-      #   run: |
-      #     SRC_NAME=r-ver \
-      #     IMAGE_NAME=${{ matrix.image_name }} \
-      #     VARIANT=${{ matrix.variant }} \
-      #     DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
-      #     make devcontainer
+
+  build-push:
+    needs:
+      - generate-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-matrix-pr.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Set up devcontainer cli
+        run: npm install -g @devcontainers/cli
+      - name: Build and push Docker images
+        run: |
+          SRC_NAME=${{ matrix.src_name }} \
+          IMAGE_NAME=${{ matrix.image_name }} \
+          VARIANT=${{ matrix.variant }} \
+          DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
+          make devcontainer
