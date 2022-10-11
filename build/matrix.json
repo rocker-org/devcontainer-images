@@ -1,0 +1,24 @@
+{
+	"include": [
+		{
+			"src_name": "r-ver",
+			"image_name": "r-ver",
+			"variant": "4.1"
+		},
+		{
+			"src_name": "r-ver",
+			"image_name": "r-ver",
+			"variant": "4.2"
+		},
+		{
+			"src_name": "rstudio",
+			"image_name": "tidyverse",
+			"variant": "4.1"
+		},
+		{
+			"src_name": "rstudio",
+			"image_name": "tidyverse",
+			"variant": "4.2"
+		}
+	]
+}
