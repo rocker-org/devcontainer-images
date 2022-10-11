@@ -23,6 +23,7 @@ concurrency:
 
 jobs:
   detect-changes:
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     outputs:
       src: ${{ steps.filter.outputs.changes }}
@@ -53,7 +54,6 @@ jobs:
           echo "${jsoncontent}"
 
   generate-matrix-pr:
-    if: ${{ github.event_name == 'pull_request' }}
     needs:
       - detect-changes
     runs-on: ubuntu-latest
