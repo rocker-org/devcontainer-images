@@ -15,8 +15,24 @@ Heavily under development.
 
 [Visual Studio Code Remote - Containers](https://containers.dev/supporting#remote-containers) can be used.
 
-Build the container with the make command.
+It is configured to create temporary files with rewritten variables based on the files in [the `src` directory](src/)
+and build the containers from the temporary definition files.
+
+The variables are written in [`build/args.json`](build/args.json).
+
+Creating files to build containers and invoking container build commands can be done via [Makefile](Makefile).
+
+Create definition files to build the container with the settings described
+in `."r-ver"."r-ver".variants."4.2"` in `build/args.json` as follows:
 
 ```sh
-SRC_NAME=r-ver IMAGE_NAME=tidyverse VARIANT=4.2 make devcontainer
+SRC_NAME=r-ver IMAGE_NAME=r-ver VARIANT=4.2 make configfiles
+```
+
+Build the container with the settings described
+in `."rstudio"."tidyverse".variants."4.2"` in `build/args.json` as follows:
+
+
+```sh
+SRC_NAME=rstudio IMAGE_NAME=tidyverse VARIANT=4.2 make devcontainer
 ```
