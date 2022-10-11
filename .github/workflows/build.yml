@@ -58,20 +58,17 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-      src_name: ${{ steps.set-matrix.outputs.src }}
-    strategy:
-      matrix:
-        src: ${{ fromJSON(needs.detect-changes.outputs.src) }}
     steps:
       - uses: actions/checkout@v3
       - id: set-json
         run: |
-          jsonfile="build/matrix/${{ matrix.src }}.json"
+          jsonfile="build/matrix.json"
           echo ::set-output name=json::${jsonfile}
           echo ${jsonfile}
       - id: set-matrix
         run: |
-          jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
+          regex=$(echo "${{ needs.detect-changes.outputs.src }}" | jq '.|join("|")' -r)
+          jsoncontent=$(jq -r '{ include: [ .include[] | select(.image_name | test("'${regex}'")) ] }' ${{ steps.set-json.outputs.json }})
           echo ::set-output name=matrix::"${jsoncontent}"
           echo ::set-output name=src_name::"${{ matrix.src }}"
 
@@ -101,7 +98,7 @@ jobs:
         run: |
           PLATFORM=linux/amd64 \
           SRC_NAME=${{ needs.generate-matrix-pr.outputs.src_name }} \
-          IMAGE_NAME=${{ matrix.image_name }} \
+          IMAGE_NAME=${{ needs.generate-matrix-pr.outputs.image_name }} \
           VARIANT=${{ matrix.variant }} \
           make devcontainer
       # - name: Build and push Docker images
