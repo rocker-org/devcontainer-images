@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.generate-matrix-pr.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
