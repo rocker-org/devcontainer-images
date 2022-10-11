@@ -1,0 +1,12 @@
+{
+	"include": [
+		{
+			"image_name": "r-ver",
+			"variant": "4.2"
+		},
+		{
+			"image_name": "rstudio",
+			"variant": "4.2"
+		}
+	]
+}

@@ -1,0 +1,52 @@
+{
+	"r-ver": {
+		"r-ver": {
+			"base-image": "docker.io/rocker/r-ver",
+			"variants": {
+				"4.2": {
+					"tags": [
+						"ghcr.io/rocker-org/devcontainer/r-ver:4.2",
+						"ghcr.io/rocker-org/devcontainer/r-ver:4"
+					],
+					"platforms": [
+						"linux/amd64",
+						"linux/arm64"
+					]
+				},
+				"4.1": {
+					"tags": [
+						"ghcr.io/rocker-org/devcontainer/r-ver:4.1"
+					],
+					"platforms": [
+						"linux/amd64",
+						"linux/arm64"
+					]
+				}
+			}
+		}
+	},
+	"rstudio": {
+		"tidyverse": {
+			"base-image": "docker.io/rocker/tidyverse",
+			"variants": {
+				"4.2": {
+					"tags": [
+						"ghcr.io/rocker-org/devcontainer/tidyverse:4.2",
+						"ghcr.io/rocker-org/devcontainer/tidyverse:4"
+					],
+					"platforms": [
+						"linux/amd64"
+					]
+				},
+				"4.1": {
+					"tags": [
+						"ghcr.io/rocker-org/devcontainer/tidyverse:4.1"
+					],
+					"platforms": [
+						"linux/amd64"
+					]
+				}
+			}
+		}
+	}
+}
