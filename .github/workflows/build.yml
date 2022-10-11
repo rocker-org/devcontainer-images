@@ -68,7 +68,7 @@ jobs:
       - id: set-matrix
         run: |
           regex=$(echo '${{ needs.detect-changes.outputs.src }}' | jq '.|join("|")' -r)
-          jsoncontent=$(jq -r '{ include: [ .include[] | select(.image_name | test("'${regex}'")) ] }' ${{ steps.set-json.outputs.json }})
+          jsoncontent=$(jq -r '{ include: [ .include[] | select(.image_name | test("'${regex}'")) ] } | tostring' ${{ steps.set-json.outputs.json }})
           echo ::set-output name=matrix::"${jsoncontent}"
           echo ::set-output name=src_name::"${{ matrix.src }}"
 
