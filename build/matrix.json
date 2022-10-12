@@ -19,6 +19,16 @@
 			"src_name": "rstudio",
 			"image_name": "tidyverse",
 			"variant": "4.2"
+		},
+		{
+			"src_name": "rstudio",
+			"image_name": "geospatial",
+			"variant": "4.1"
+		},
+		{
+			"src_name": "rstudio",
+			"image_name": "geospatial",
+			"variant": "4.2"
 		}
 	]
 }
