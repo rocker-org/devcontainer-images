@@ -15,7 +15,7 @@
 			"gid": "1000",
 			"upgradePackages": true
 		},
-		"ghcr.io/rocker-org/devcontainer-features/r-rig:0": {
+		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
 			"version": "none",
 			"vscodeRSupport": "full",
 			"installDevTools": true,
