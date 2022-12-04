@@ -19,22 +19,20 @@
 			"version": "none",
 			"vscodeRSupport": "full",
 			"installDevTools": true,
+			"installREnv": true,
 			"installRMarkdown": true,
 			"installRadian": true,
 			"installVscDebugger": true
 		},
 		"ghcr.io/devcontainers/features/node:1": "none"
 	},
-	"overrideFeatureInstallOrder":[
+	"overrideFeatureInstallOrder": [
 		"ghcr.io/devcontainers/features/common-utils"
 	],
 	"remoteUser": "rstudio",
 	"customizations": {
 		"vscode": {
-			"extensions": [
-				"reditorsupport.r",
-				"RDebugger.r-debugger"
-			],
+			"extensions": ["reditorsupport.r", "RDebugger.r-debugger"],
 			"settings": {
 				"r.rterm.linux": "radian",
 				"r.bracketedPaste": true,
