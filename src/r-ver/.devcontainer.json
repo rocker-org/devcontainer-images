@@ -26,14 +26,11 @@
 	"remoteUser": "rstudio",
 	"customizations": {
 		"vscode": {
-			"extensions": ["reditorsupport.r", "RDebugger.r-debugger"],
+			"extensions": ["RDebugger.r-debugger"],
 			"settings": {
 				"r.rterm.linux": "/usr/local/bin/radian",
 				"r.bracketedPaste": true,
-				"r.plot.useHttpgd": true,
-				"[r]": {
-					"editor.wordSeparators": "`~!@#%$^&*()-=+[{]}\\|;:'\",<>/?"
-				}
+				"r.plot.useHttpgd": true
 			}
 		}
 	}
