@@ -8,13 +8,7 @@
 		}
 	},
 	"features": {
-		"ghcr.io/devcontainers/features/common-utils:1": {
-			"installZsh": true,
-			"username": "rstudio",
-			"uid": "1000",
-			"gid": "1000",
-			"upgradePackages": true
-		},
+		"ghcr.io/devcontainers/features/common-utils:2": {},
 		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
 			"version": "none",
 			"vscodeRSupport": "full",
@@ -32,14 +26,11 @@
 	"remoteUser": "rstudio",
 	"customizations": {
 		"vscode": {
-			"extensions": ["reditorsupport.r", "RDebugger.r-debugger"],
+			"extensions": ["RDebugger.r-debugger"],
 			"settings": {
 				"r.rterm.linux": "/usr/local/bin/radian",
 				"r.bracketedPaste": true,
-				"r.plot.useHttpgd": true,
-				"[r]": {
-					"editor.wordSeparators": "`~!@#%$^&*()-=+[{]}\\|;:'\",<>/?"
-				}
+				"r.plot.useHttpgd": true
 			}
 		}
 	}
