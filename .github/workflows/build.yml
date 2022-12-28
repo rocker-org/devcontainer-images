@@ -70,7 +70,7 @@ jobs:
         run: |
           regex=$(echo '${{ needs.detect-changes.outputs.src }}' | jq '.|join("|")' -r)
           jsoncontent=$(jq -r '{ include: [ .include[] | select(.src_name | test("'${regex}'")) ] } | tostring' ${{ steps.set-json.outputs.json }})
-          echo ::set-output name=matrix::"${jsoncontent}"
+          echo "matrix=${jsoncontent}" >>"${GITHUB_OUTPUT}"
           echo "${jsoncontent}"
 
   build-pr:
