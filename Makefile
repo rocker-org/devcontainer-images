@@ -7,6 +7,11 @@ VARIANT ?= $(shell jq '."$(SRC_NAME)"[].variants | keys | .[]' -r $(ARG_JSON) | 
 ARG_JSON := build/args.json
 WORK_DIR := work/$(IMAGE_NAME)/$(VARIANT)
 
+DEFINITION_ID ?= $(IMAGE_NAME)
+GIT_REPOSITORY ?= ""
+GIT_REPOSITORY_REVISION ?= $(shell git rev-parse HEAD)
+BUILD_TIMESTAMP ?= $(shell date)
+
 .PHONY: all
 all:
 
@@ -35,14 +40,25 @@ $(WORK_DIR)/.devcontainer.json: src/$(SRC_NAME)/.devcontainer.json $(ARG_JSON)
 	cat $< | jq '.build.args.VARIANT |= "$(VARIANT)" | .build.args.BASE_IMAGE |= "$(BASE_IMAGE)"' >$@
 
 DOCKERFILE := $(wildcard src/$(SRC_NAME)/Dockerfile)
-$(WORK_DIR)/Dockerfile: $(DOCKERFILE)
+$(WORK_DIR)/Dockerfile: $(DOCKERFILE) $(WORK_DIR)/meta.env
 	mkdir -p $(@D)
 	cp $< $@
+	echo '' >>$@
+	echo 'COPY meta.env /usr/local/etc/dev-containers/meta.env' >>$@
 
 ASSETS := $(wildcard src/$(SRC_NAME)/assets/*)
 $(WORK_DIR)/assets/%: src/$(SRC_NAME)/assets/%
 	mkdir -p $@
 	cp $< $@
+
+.PHONY: $(WORK_DIR)/meta.env
+$(WORK_DIR)/meta.env:
+	mkdir -p $(@D)
+	echo "DEFINITION_ID='$(DEFINITION_ID)'" >$@
+	echo "VARIANT='$(VARIANT)'" >>$@
+	echo "GIT_REPOSITORY='$(GIT_REPOSITORY)'" >>$@
+	echo "GIT_REPOSITORY_REVISION='$(GIT_REPOSITORY_REVISION)'" >>$@
+	echo "BUILD_TIMESTAMP='$(BUILD_TIMESTAMP)'" >>$@
 
 .PHONY: configfiles
 configfiles: $(WORK_DIR)/.devcontainer.json $(addprefix $(WORK_DIR)/,$(notdir $(DOCKERFILE))) $(addprefix $(WORK_DIR)/assets/,$(notdir $(ASSETS)))

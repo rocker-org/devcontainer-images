@@ -12,6 +12,7 @@ on:
     branches:
       - main
     paths:
+      - Makefile
       - src/**.devcontainer.json
       - src/**Dockerfile
       - src/**/assets/**
@@ -70,7 +71,7 @@ jobs:
         run: |
           regex=$(echo '${{ needs.detect-changes.outputs.src }}' | jq '.|join("|")' -r)
           jsoncontent=$(jq -r '{ include: [ .include[] | select(.src_name | test("'${regex}'")) ] } | tostring' ${{ steps.set-json.outputs.json }})
-          echo ::set-output name=matrix::"${jsoncontent}"
+          echo "matrix=${jsoncontent}" >>"${GITHUB_OUTPUT}"
           echo "${jsoncontent}"
 
   build-pr:
@@ -87,6 +88,7 @@ jobs:
       - name: Test build
         if: ${{ github.event_name == 'pull_request' }}
         run: |
+          GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
           PLATFORM=linux/amd64 \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
@@ -116,6 +118,7 @@ jobs:
         run: npm install -g @devcontainers/cli
       - name: Build and push Docker images
         run: |
+          GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
