@@ -87,6 +87,7 @@ jobs:
       - name: Test build
         if: ${{ github.event_name == 'pull_request' }}
         run: |
+          GIT_REPOSITORY="${GITHUB_REPOSITORY}" \
           PLATFORM=linux/amd64 \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
@@ -116,6 +117,7 @@ jobs:
         run: npm install -g @devcontainers/cli
       - name: Build and push Docker images
         run: |
+          GIT_REPOSITORY="${GITHUB_REPOSITORY}" \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
