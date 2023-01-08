@@ -17,8 +17,7 @@
 			"installRMarkdown": true,
 			"installRadian": true,
 			"installVscDebugger": true
-		},
-		"ghcr.io/devcontainers/features/node:1": "none"
+		}
 	},
 	"overrideFeatureInstallOrder": [
 		"ghcr.io/devcontainers/features/common-utils"
