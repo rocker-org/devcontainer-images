@@ -3,7 +3,7 @@ title: "test"
 date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
 output:
   md_document:
-    variant: markdown_github
+    variant: gfm
 ---
 
 ```{r}
