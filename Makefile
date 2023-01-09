@@ -63,6 +63,18 @@ $(WORK_DIR)/meta.env:
 .PHONY: configfiles
 configfiles: $(WORK_DIR)/.devcontainer.json $(addprefix $(WORK_DIR)/,$(notdir $(DOCKERFILE))) $(addprefix $(WORK_DIR)/assets/,$(notdir $(ASSETS)))
 
+TEST_PROJECT_FILES := $(wildcard src/$(SRC_NAME)/test-project/*)
+$(WORK_DIR)/test-project/%: src/$(SRC_NAME)/test-project/%
+	mkdir -p $@
+	cp $< $@
+
+.PHONY: testfiles
+testfiles: $(addprefix $(WORK_DIR)/test-project/,$(notdir $(TEST_PROJECT_FILES)))
+
+.PHONY: test
+test: testfiles configfiles
+	devcontainer exec --workspace-folder $(WORK_DIR) bash -c 'test-project/test.sh'
+
 .PHONY: clean
 clean:
 	rm -rf work
