@@ -74,7 +74,6 @@ testfiles: $(addprefix $(WORK_DIR)/test-project/,$(notdir $(TEST_PROJECT_FILES))
 .PHONY: test
 test: testfiles devcontainer
 	devcontainer up --workspace-folder $(WORK_DIR) \
-	&& devcontainer exec --workspace-folder $(WORK_DIR) devcontainer-info \
 	&& devcontainer exec --workspace-folder $(WORK_DIR) bash -c 'test-project/test.sh'
 
 .PHONY: clean
