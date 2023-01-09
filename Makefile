@@ -48,7 +48,7 @@ $(WORK_DIR)/Dockerfile: $(DOCKERFILE) $(WORK_DIR)/meta.env
 
 ASSETS := $(wildcard src/$(SRC_NAME)/assets/*)
 $(WORK_DIR)/assets/%: src/$(SRC_NAME)/assets/%
-	mkdir -p $@
+	mkdir -p $(@D)
 	cp $< $@
 
 .PHONY: $(WORK_DIR)/meta.env
@@ -65,7 +65,7 @@ configfiles: $(WORK_DIR)/.devcontainer.json $(addprefix $(WORK_DIR)/,$(notdir $(
 
 TEST_PROJECT_FILES := $(wildcard src/$(SRC_NAME)/test-project/*)
 $(WORK_DIR)/test-project/%: src/$(SRC_NAME)/test-project/%
-	mkdir -p $@
+	mkdir -p $(@D)
 	cp $< $@
 
 .PHONY: testfiles
