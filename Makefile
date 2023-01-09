@@ -72,7 +72,7 @@ $(WORK_DIR)/test-project/%: src/$(SRC_NAME)/test-project/%
 testfiles: $(addprefix $(WORK_DIR)/test-project/,$(notdir $(TEST_PROJECT_FILES)))
 
 .PHONY: test
-test: testfiles
+test: testfiles devcontainer
 	devcontainer up --workspace-folder $(WORK_DIR) \
 	&& devcontainer exec --workspace-folder $(WORK_DIR) bash -c 'test-project/test.sh'
 
