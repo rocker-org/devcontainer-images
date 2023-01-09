@@ -72,7 +72,7 @@ $(WORK_DIR)/test-project/%: src/$(SRC_NAME)/test-project/%
 testfiles: $(addprefix $(WORK_DIR)/test-project/,$(notdir $(TEST_PROJECT_FILES)))
 
 .PHONY: test
-test: testfiles devcontainer
+test: testfiles
 	devcontainer exec --workspace-folder $(WORK_DIR) bash -c 'test-project/test.sh'
 
 .PHONY: clean
