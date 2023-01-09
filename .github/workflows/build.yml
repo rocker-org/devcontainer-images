@@ -93,7 +93,7 @@ jobs:
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
-          make devcontainer
+          make test
 
   build-push:
     needs:
