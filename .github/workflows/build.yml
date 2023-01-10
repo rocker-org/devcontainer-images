@@ -46,12 +46,12 @@ jobs:
       - id: set-json
         run: |
           jsonfile="build/matrix.json"
-          echo ::set-output name=json::${jsonfile}
+          echo "json=${jsonfile}" >>"$GITHUB_OUTPUT"
           echo ${jsonfile}
       - id: set-matrix
         run: |
           jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
-          echo ::set-output name=matrix::"${jsoncontent}"
+          echo "matrix=${jsoncontent}" >>"$GITHUB_OUTPUT"
           echo "${jsoncontent}"
 
   generate-matrix-pr:
