@@ -1,0 +1,113 @@
+---
+title: "History of published images"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
+output:
+  github_document:
+    toc: false
+    df_print: kable
+    html_preview: false
+params:
+  git_repository: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+knitr::opts_knit$set(root.dir = rprojroot::find_root_file(criterion = rprojroot::is_git_root))
+```
+
+```{r data_manipulation}
+df_args <- jsonlite::read_json("build/args.json") |>
+  tibble::enframe(name = "src") |>
+  dplyr::mutate(order_number = dplyr::row_number()) |>
+  tidyr::unnest_longer(value, indices_to = "image") |>
+  tidyr::unnest_longer(value, indices_to = "name") |>
+  tidyr::pivot_wider() |>
+  tidyr::unnest_longer(variants, indices_to = "variant") |>
+  tidyr::unnest_longer(variants, indices_to = "name") |>
+  tidyr::pivot_wider(values_from = "variants") |>
+  tidyr::unnest_longer(tags) |>
+  dplyr::mutate(
+    base_image = purrr::map_chr(`base-image`, 1),
+    .keep = "unused"
+  ) |>
+  dplyr::select(
+    image,
+    base_image,
+    version = variant,
+    tags,
+    order_number
+  )
+
+df_images <- fs::dir_ls(path = "reports/imagelist", glob = "*.tsv") |>
+  readr::read_tsv(col_names = FALSE, lazy = FALSE) |>
+  dplyr::filter(X3 != "<none>") |>
+  dplyr::mutate(
+    id = X1,
+    tags = stringr::str_c(X2, ":", X3),
+    created_time = lubridate::ymd_hms(X4),
+    .keep = "none"
+  ) |>
+  dplyr::group_by(tags) |>
+  dplyr::slice_max(order_by = created_time, with_ties = TRUE) |>
+  dplyr::ungroup()
+
+df_all <- df_args |>
+  dplyr::mutate(tags = stringr::str_remove(tags, "^docker.io/library|^docker.io/")) |>
+  dplyr::inner_join(df_images, by = "tags") |>
+  dplyr::group_by(id) |>
+  dplyr::slice_max(order_by = created_time, with_ties = TRUE) |>
+  dplyr::mutate(tags = stringr::str_c("`", stringr::str_c(tags, collapse = "`<br/>`"), "`")) |>
+  dplyr::slice_head(n = 1) |>
+  dplyr::ungroup() |>
+  tidyr::drop_na() |>
+  dplyr::mutate(report_name = stringr::str_c(image, "_", id))
+```
+
+```{r rename_reports}
+.remove_old_report <- function(id, path = "reports", filename_prefix = ".*_") {
+  old_reports <- fs::dir_ls(path) |>
+    stringr::str_subset(stringr::str_c(filename_prefix, id))
+  if (length(old_reports) >= 1) fs::file_delete(old_reports)
+  return(invisible())
+}
+.rename_report <- function(id, new_file, path = "reports") {
+  report_path <- fs::path(path, id, ext = "md")
+  report_new_path <- fs::path(path, new_file, ext = "md")
+  fs::file_move(report_path, report_new_path)
+  return(invisible())
+}
+purrr::walk(df_all$id, .remove_old_report)
+purrr::walk2(df_all$id, df_all$report_name, .rename_report)
+```
+
+```{r}
+.link_to_commit <- function(commit_hash) {
+  base_url <- stringr::str_c(params$git_repository, "/tree/")
+  commit_short_hash <- commit_hash |>
+    substr(1, 7)
+
+  stringr::str_c("[`", commit_short_hash, "`](", base_url, commit_hash, ")")
+}
+```
+
+This wiki contains information about images built from this repository.
+
+*This page was generated from `r system("git rev-parse HEAD", intern = TRUE) |> .link_to_commit()`.*
+
+## Active tagged images
+
+The currently updated images are as follows.
+Click on the ID to see detailed information about each image.
+
+```{r print_table}
+df_all |>
+  dplyr::arrange(order_number, dplyr::desc(version)) |>
+  dplyr::mutate(
+    R = version,
+    BaseImage = base_image,
+    RepoTags = tags,
+    ID = stringr::str_c("[", id, "](./", report_name, ")"),
+    CreatedTime = created_time,
+    .keep = "none"
+  )
+```
