@@ -1,0 +1,115 @@
+name: Report published images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - build/reports/*.Rmd
+  pull_request:
+    branches:
+      - main
+    paths:
+      - build/reports/*.Rmd
+  workflow_run:
+    workflows:
+      - Build and push images
+    branches:
+      - main
+    types:
+      - completed
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-json
+        run: |
+          jsonfile="build/matrix.json"
+          echo "json=${jsonfile}" >>"$GITHUB_OUTPUT"
+          echo ${jsonfile}
+      - id: set-matrix
+        run: |
+          jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
+          echo "matrix=${jsoncontent}" >>"$GITHUB_OUTPUT"
+          echo "${jsoncontent}"
+
+  inspect:
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clean up
+        run: |
+          docker image prune --all --force
+
+      - name: Pull and inspect images
+        run: |
+          export SRC_NAME=${{ matrix.src_name }}
+          export IMAGE_NAME=${{ matrix.image_name }}
+          export VARIANT=${{ matrix.variant }}
+          make docker-pull
+          make inspect-image-all
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: tmp
+          path: tmp
+
+  publish_reports:
+    if: always()
+    needs: inspect
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+
+      - name: Set as safe for following git commands
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Checkout wiki
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v3
+        with:
+          repository: "${{ github.repository }}.wiki"
+          path: reports
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: tmp
+          path: tmp
+
+      - name: Generate reports and update wiki home
+        run: |
+          GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+            make --jobs=2 wiki-home
+
+      - name: Upload artifacts
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v3
+        with:
+          name: reports
+          path: reports
+
+      - name: Update wiki
+        if: github.event_name != 'pull_request'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automated update
+          repository: reports

@@ -8,12 +8,20 @@ ARG_JSON := build/args.json
 WORK_DIR := work/$(IMAGE_NAME)/$(VARIANT)
 
 DEFINITION_ID ?= $(IMAGE_NAME)
-GIT_REPOSITORY ?= ""
+GIT_REPOSITORY ?=
 GIT_REPOSITORY_REVISION ?= $(shell git rev-parse HEAD)
 BUILD_TIMESTAMP ?= $(shell date)
 
 .PHONY: all
 all:
+
+.PHONY: clean
+clean:
+	rm -rf work
+
+################################################################################
+# Builds
+################################################################################
 
 BASE_IMAGE := $(shell jq '."$(SRC_NAME)"."$(IMAGE_NAME)"."base-image"' -r $(ARG_JSON))
 
@@ -63,6 +71,10 @@ $(WORK_DIR)/meta.env:
 .PHONY: configfiles
 configfiles: $(WORK_DIR)/.devcontainer.json $(addprefix $(WORK_DIR)/,$(notdir $(DOCKERFILE))) $(addprefix $(WORK_DIR)/assets/,$(notdir $(ASSETS)))
 
+################################################################################
+# Tests
+################################################################################
+
 TEST_PROJECT_FILES := $(wildcard src/$(SRC_NAME)/test-project/*)
 $(WORK_DIR)/test-project/%: src/$(SRC_NAME)/test-project/%
 	mkdir -p $(@D)
@@ -76,6 +88,47 @@ test: testfiles devcontainer
 	devcontainer up --workspace-folder $(WORK_DIR) \
 	&& devcontainer exec --workspace-folder $(WORK_DIR) bash -c 'test-project/test.sh'
 
-.PHONY: clean
-clean:
-	rm -rf work
+################################################################################
+# Inspect images
+################################################################################
+
+REPORT_SOURCE_ROOT ?= tmp/inspects
+IMAGELIST_DIR ?= tmp/imagelist
+IMAGELIST_NAME ?= $(SRC_NAME)-$(IMAGE_NAME)-$(VARIANT).tsv
+REPORT_DIR ?= reports
+
+.PHONY: docker-pull
+docker-pull:
+	$(foreach tag, $(subst :,\:,$(TAGS)), $(shell docker pull $(tag) >/dev/null 2>&1))
+
+IMAGE_FILTER := $(addprefix --filter=reference=, $(TAGS))
+
+.PHONY: inspect-image-all
+inspect-image-all: $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER) | uniq), inspect-manifest/$(image))
+	mkdir -p $(IMAGELIST_DIR)
+	docker image ls $(IMAGE_FILTER) --format "{{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.CreatedAt}}" >$(IMAGELIST_DIR)/$(IMAGELIST_NAME)
+inspect-manifest/%: inspect-image/%
+	-$(foreach digest, $(shell jq '.[].RepoDigests[]' -r $(REPORT_SOURCE_ROOT)/$*/docker_inspect.json), $(shell docker buildx imagetools inspect $(digest) >>$(REPORT_SOURCE_ROOT)/$*/imagetools_inspect.txt))
+inspect-image/%:
+	mkdir -p $(REPORT_SOURCE_ROOT)/$*
+	-docker image inspect $* >$(REPORT_SOURCE_ROOT)/$*/docker_inspect.json
+	-docker run --rm $* devcontainer-info >$(REPORT_SOURCE_ROOT)/$*/devcontainer-info.txt
+	-docker run --rm $* dpkg-query --show --showformat='$${Package}\t$${Version}\t$${Status}\n' >$(REPORT_SOURCE_ROOT)/$*/apt_packages.tsv
+	-docker run --rm $* Rscript -e 'as.data.frame(installed.packages()[, 3])' >$(REPORT_SOURCE_ROOT)/$*/r_packages.ssv
+	-docker run --rm $* python3 -m pip list --disable-pip-version-check >$(REPORT_SOURCE_ROOT)/$*/pip_packages.ssv
+
+################################################################################
+# Generate reports
+################################################################################
+
+.PHONY: wiki-home
+wiki-home: report-all
+	cp -r $(IMAGELIST_DIR) $(REPORT_DIR)
+	Rscript -e \
+		'rmarkdown::render(input = "build/reports/wiki_home.Rmd", output_dir = "$(REPORT_DIR)", output_file = "Home.md", params = list(git_repository = "$(GIT_REPOSITORY)"))'
+
+.PHONY: report-all
+report-all: $(foreach I, $(wildcard $(REPORT_SOURCE_ROOT)/*), report/$(I))
+report/%:
+	mkdir -p $(REPORT_DIR)
+	-./build/knit-report.R $* $(GIT_REPOSITORY) $(@F) $(REPORT_DIR)
