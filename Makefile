@@ -111,7 +111,7 @@ inspect-manifest/%: inspect-image/%
 	-$(foreach digest, $(shell jq '.[].RepoDigests[]' -r $(REPORT_SOURCE_ROOT)/$*/docker_inspect.json), $(shell docker buildx imagetools inspect $(digest) >> $(REPORT_SOURCE_ROOT)/$*/imagetools_inspect.txt))
 inspect-image/%:
 	mkdir -p $(REPORT_SOURCE_ROOT)/$*
-	-docker image inspect $* > $(REPORT_SOURCE_ROOT)/$*/docker_inspect.json
+	-docker image inspect $* >$(REPORT_SOURCE_ROOT)/$*/docker_inspect.json
 	-docker run --rm $* devcontainer-info >$(REPORT_SOURCE_ROOT)/$*/devcontainer-info.txt
 	-docker run --rm $* dpkg-query --show --showformat='$${Package}\t$${Version}\t$${Status}\n' >$(REPORT_SOURCE_ROOT)/$*/apt_packages.tsv
 	-docker run --rm $* Rscript -e 'as.data.frame(installed.packages()[, 3])' >$(REPORT_SOURCE_ROOT)/$*/r_packages.ssv
