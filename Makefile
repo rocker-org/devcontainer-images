@@ -8,7 +8,7 @@ ARG_JSON := build/args.json
 WORK_DIR := work/$(IMAGE_NAME)/$(VARIANT)
 
 DEFINITION_ID ?= $(IMAGE_NAME)
-GIT_REPOSITORY ?= ""
+GIT_REPOSITORY ?=
 GIT_REPOSITORY_REVISION ?= $(shell git rev-parse HEAD)
 BUILD_TIMESTAMP ?= $(shell date)
 
@@ -116,3 +116,15 @@ inspect-image/%:
 	-docker run --rm $* dpkg-query --show --showformat='$${Package}\t$${Version}\t$${Status}\n' >$(REPORT_SOURCE_ROOT)/$*/apt_packages.tsv
 	-docker run --rm $* Rscript -e 'as.data.frame(installed.packages()[, 3])' >$(REPORT_SOURCE_ROOT)/$*/r_packages.ssv
 	-docker run --rm $* python3 -m pip list --disable-pip-version-check >$(REPORT_SOURCE_ROOT)/$*/pip_packages.ssv
+
+.PHONY: wiki-home
+wiki-home: report-all
+	cp -r $(IMAGELIST_DIR) $(REPORT_DIR)
+	-Rscript -e \
+		'rmarkdown::render(input = "build/reports/wiki_home.Rmd", output_dir = "$(REPORT_DIR)", output_file = "Home.md", params = list(git_repository = "$(GIT_REPOSITORY)"))'
+
+.PHONY: report-all
+report-all: $(foreach I, $(wildcard $(REPORT_SOURCE_ROOT)/*), report/$(I))
+report/%:
+	mkdir -p $(REPORT_DIR)
+	-./build/knit-report.R $* $(GIT_REPOSITORY) $(@F) $(REPORT_DIR)
