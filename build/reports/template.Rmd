@@ -100,7 +100,7 @@ df_digest <- tryCatch(
   readr::read_table(params$imagetotls_inspect_file, col_names = c("name", "value")) |>
     dplyr::filter(name %in% c("Name:", "Platform:")) |>
     dplyr::filter(!(name == "Name:" & dplyr::lead(name) != "Platform:")) |>
-    dplyr::mutate(id = (row_number() + 1) %/% 2) |>
+    dplyr::mutate(id = (dplyr::row_number() + 1) %/% 2) |>
     tidyr::pivot_wider(id_cols = id) |>
     dplyr::select(platform = `Platform:`, RepoDigests = `Name:`),
   error = function(e) NULL

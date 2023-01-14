@@ -104,11 +104,11 @@ docker-pull:
 IMAGE_FILTER := $(addprefix --filter=reference=, $(TAGS))
 
 .PHONY: inspect-image-all
-inspect-image-all: docker-pull $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER)), inspect-manifest/$(image))
+inspect-image-all: docker-pull $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER) | uniq), inspect-manifest/$(image))
 	mkdir -p $(IMAGELIST_DIR)
 	docker image ls $(IMAGE_FILTER) --format "{{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.CreatedAt}}" >$(IMAGELIST_DIR)/$(IMAGELIST_NAME)
 inspect-manifest/%: inspect-image/%
-	-$(foreach digest, $(shell jq '.[].RepoDigests[]' -r $(REPORT_SOURCE_ROOT)/$*/docker_inspect.json), $(shell docker buildx imagetools inspect $(digest) >> $(REPORT_SOURCE_ROOT)/$*/imagetools_inspect.txt))
+	-$(foreach digest, $(shell jq '.[].RepoDigests[]' -r $(REPORT_SOURCE_ROOT)/$*/docker_inspect.json), $(shell docker buildx imagetools inspect $(digest) >>$(REPORT_SOURCE_ROOT)/$*/imagetools_inspect.txt))
 inspect-image/%:
 	mkdir -p $(REPORT_SOURCE_ROOT)/$*
 	-docker image inspect $* >$(REPORT_SOURCE_ROOT)/$*/docker_inspect.json
