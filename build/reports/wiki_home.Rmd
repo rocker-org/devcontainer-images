@@ -18,8 +18,8 @@ knitr::opts_knit$set(root.dir = rprojroot::find_root_file(criterion = rprojroot:
 ```{r data_manipulation}
 df_args <- jsonlite::read_json("build/args.json") |>
   tibble::enframe(name = "src") |>
-  dplyr::mutate(order_number = dplyr::row_number()) |>
   tidyr::unnest_longer(value, indices_to = "image") |>
+  dplyr::mutate(order_number = dplyr::row_number()) |>
   tidyr::unnest_longer(value, indices_to = "name") |>
   tidyr::pivot_wider() |>
   tidyr::unnest_longer(variants, indices_to = "variant") |>
@@ -103,8 +103,7 @@ Click on the ID to see detailed information about each image.
 df_all |>
   dplyr::arrange(order_number, dplyr::desc(version)) |>
   dplyr::mutate(
-    R = version,
-    BaseImage = base_image,
+    BaseImage = stringr::str_c(base_image, ":", version),
     RepoTags = tags,
     ID = stringr::str_c("[", id, "](./", report_name, ")"),
     CreatedTime = created_time,
