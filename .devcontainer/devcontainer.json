@@ -4,7 +4,7 @@
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
-			"packages": "dplyr,tidyr,readr"
+			"packages": "dplyr,tidyr,readr,lubridate"
 		}
 	},
 	"remoteEnv": {
