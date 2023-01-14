@@ -1,8 +1,8 @@
 # build working directory
-work/
+/work
 
 # reports directory
-reports/
+/reports
 
 # tmpfiles
-tmp/
+/tmp
