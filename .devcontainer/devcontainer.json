@@ -2,7 +2,10 @@
 	"image": "ghcr.io/rocker-org/devcontainer/r-ver:4",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-		"ghcr.io/devcontainers/features/node:1": {}
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
+			"packages": "dplyr,tidyr,readr"
+		}
 	},
 	"remoteEnv": {
 		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
