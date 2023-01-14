@@ -57,10 +57,10 @@ jobs:
 
       - name: Pull images
         run: |
-          GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
-          SRC_NAME=${{ matrix.src_name }} \
-          IMAGE_NAME=${{ matrix.image_name }} \
-          VARIANT=${{ matrix.variant }} \
+          export SRC_NAME=${{ matrix.src_name }}
+          export IMAGE_NAME=${{ matrix.image_name }}
+          export VARIANT=${{ matrix.variant }}
+          make docker-pull
           make inspect-image-all
 
       - name: Upload artifacts

@@ -104,7 +104,7 @@ docker-pull:
 IMAGE_FILTER := $(addprefix --filter=reference=, $(TAGS))
 
 .PHONY: inspect-image-all
-inspect-image-all: docker-pull $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER) | uniq), inspect-manifest/$(image))
+inspect-image-all: $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER) | uniq), inspect-manifest/$(image))
 	mkdir -p $(IMAGELIST_DIR)
 	docker image ls $(IMAGE_FILTER) --format "{{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.CreatedAt}}" >$(IMAGELIST_DIR)/$(IMAGELIST_NAME)
 inspect-manifest/%: inspect-image/%
@@ -120,7 +120,7 @@ inspect-image/%:
 .PHONY: wiki-home
 wiki-home: report-all
 	cp -r $(IMAGELIST_DIR) $(REPORT_DIR)
-	-Rscript -e \
+	Rscript -e \
 		'rmarkdown::render(input = "build/reports/wiki_home.Rmd", output_dir = "$(REPORT_DIR)", output_file = "Home.md", params = list(git_repository = "$(GIT_REPOSITORY)"))'
 
 .PHONY: report-all
