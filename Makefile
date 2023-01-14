@@ -94,7 +94,7 @@ test: testfiles devcontainer
 
 REPORT_SOURCE_ROOT ?= tmp/inspects
 IMAGELIST_DIR ?= tmp/imagelist
-IMAGELIST_NAME ?= imagelist.tsv
+IMAGELIST_NAME ?= $(SRC_NAME)-$(IMAGE_NAME)-$(VARIANT).tsv
 REPORT_DIR ?= reports
 
 .PHONY: docker-pull
