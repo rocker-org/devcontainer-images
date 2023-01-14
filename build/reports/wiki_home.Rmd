@@ -60,7 +60,7 @@ df_all <- df_args |>
   dplyr::slice_head(n = 1) |>
   dplyr::ungroup() |>
   tidyr::drop_na() |>
-  dplyr::mutate(report_name = stringr::str_c(image, "_", id))
+  dplyr::mutate(report_name = stringr::str_c(image, version, id, sep = "_"))
 ```
 
 ```{r rename_reports}

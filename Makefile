@@ -17,7 +17,7 @@ all:
 
 .PHONY: clean
 clean:
-	rm -rf work
+	rm -rf work reports tmp
 
 ################################################################################
 # Builds
