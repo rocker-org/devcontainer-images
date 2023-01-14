@@ -104,7 +104,7 @@ docker-pull:
 IMAGE_FILTER := $(addprefix --filter=reference=, $(TAGS))
 
 .PHONY: inspect-image-all
-inspect-image-all: $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER)), inspect-manifest/$(image))
+inspect-image-all: docker-pull $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER)), inspect-manifest/$(image))
 	mkdir -p $(IMAGELIST_DIR)
 	docker image ls $(IMAGE_FILTER) --format "{{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.CreatedAt}}" >$(IMAGELIST_DIR)/$(IMAGELIST_NAME)
 inspect-manifest/%: inspect-image/%
