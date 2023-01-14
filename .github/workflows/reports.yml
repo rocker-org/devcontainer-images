@@ -55,7 +55,7 @@ jobs:
         run: |
           docker image prune --all --force
 
-      - name: Pull images
+      - name: Pull and inspect images
         run: |
           export SRC_NAME=${{ matrix.src_name }}
           export IMAGE_NAME=${{ matrix.image_name }}
@@ -98,7 +98,7 @@ jobs:
       - name: Generate reports and update wiki home
         run: |
           GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
-          make --jobs=2 wiki-home
+            make --jobs=2 wiki-home
 
       - name: Upload artifacts
         if: github.event_name == 'pull_request'

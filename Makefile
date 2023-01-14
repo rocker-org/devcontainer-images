@@ -89,7 +89,7 @@ test: testfiles devcontainer
 	&& devcontainer exec --workspace-folder $(WORK_DIR) bash -c 'test-project/test.sh'
 
 ################################################################################
-# Reports
+# Inspect images
 ################################################################################
 
 REPORT_SOURCE_ROOT ?= tmp/inspects
@@ -116,6 +116,10 @@ inspect-image/%:
 	-docker run --rm $* dpkg-query --show --showformat='$${Package}\t$${Version}\t$${Status}\n' >$(REPORT_SOURCE_ROOT)/$*/apt_packages.tsv
 	-docker run --rm $* Rscript -e 'as.data.frame(installed.packages()[, 3])' >$(REPORT_SOURCE_ROOT)/$*/r_packages.ssv
 	-docker run --rm $* python3 -m pip list --disable-pip-version-check >$(REPORT_SOURCE_ROOT)/$*/pip_packages.ssv
+
+################################################################################
+# Generate reports
+################################################################################
 
 .PHONY: wiki-home
 wiki-home: report-all
