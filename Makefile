@@ -101,8 +101,9 @@ REPORT_DIR ?= reports
 docker-pull:
 	$(foreach tag, $(subst :,\:,$(TAGS)), $(shell docker pull $(tag) >/dev/null 2>&1))
 
-.PHONY: inspect-image-all
 IMAGE_FILTER := $(addprefix --filter=reference=, $(TAGS))
+
+.PHONY: inspect-image-all
 inspect-image-all: $(foreach image, $(shell docker image ls -q $(IMAGE_FILTER)), inspect-manifest/$(image))
 	mkdir -p $(IMAGELIST_DIR)
 	docker image ls $(IMAGE_FILTER) --format "{{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.CreatedAt}}" >$(IMAGELIST_DIR)/$(IMAGELIST_NAME)
