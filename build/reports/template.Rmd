@@ -106,10 +106,10 @@ df_digest <- tryCatch(
     dplyr::filter(stringr::str_starts(platform, "linux/")),
   error = function(e) NULL
 )
-if (!is.null(df_digest) && nrow(df_digest) > 0 && unique(df_digest$platform) > 1) {
+if (!is.null(df_digest) && nrow(df_digest) > 0) {
   cat(
     "### Platforms\n\n",
-    "This image was created by a multi-architecture build. The digests for each platform are as follows."
+    "The digests for each platform are as follows."
   )
   df_digest |>
     dplyr::mutate(RepoDigests = paste0("`", RepoDigests, "`")) |>
