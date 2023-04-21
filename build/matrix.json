@@ -3,17 +3,12 @@
 		{
 			"src_name": "r-ver",
 			"image_name": "r-ver",
-			"variant": "4.1"
+			"variant": "4.2"
 		},
 		{
 			"src_name": "r-ver",
 			"image_name": "r-ver",
-			"variant": "4.2"
-		},
-		{
-			"src_name": "rstudio",
-			"image_name": "tidyverse",
-			"variant": "4.1"
+			"variant": "4.3"
 		},
 		{
 			"src_name": "rstudio",
@@ -22,13 +17,18 @@
 		},
 		{
 			"src_name": "rstudio",
-			"image_name": "geospatial",
-			"variant": "4.1"
+			"image_name": "tidyverse",
+			"variant": "4.3"
 		},
 		{
 			"src_name": "rstudio",
 			"image_name": "geospatial",
 			"variant": "4.2"
+		},
+		{
+			"src_name": "rstudio",
+			"image_name": "geospatial",
+			"variant": "4.3"
 		}
 	]
 }
