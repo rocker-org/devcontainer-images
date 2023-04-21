@@ -12,6 +12,7 @@ on:
     branches:
       - main
     paths:
+      - build/*.json
       - Makefile
       - src/**.devcontainer.json
       - src/**Dockerfile
