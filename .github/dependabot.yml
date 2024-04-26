@@ -16,11 +16,6 @@ updates:
       interval: daily
 
   - package-ecosystem: "devcontainers"
-    directory: src/r-ver
-    schedule:
-      interval: daily
-
-  - package-ecosystem: "devcontainers"
     directory: src/rstudio
     schedule:
       interval: daily
