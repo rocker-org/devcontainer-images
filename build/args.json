@@ -3,9 +3,9 @@
 		"r-ver": {
 			"base-image": "docker.io/rocker/r-ver",
 			"variants": {
-				"4.3": {
+				"4.4": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/r-ver:4.3",
+						"ghcr.io/rocker-org/devcontainer/r-ver:4.4",
 						"ghcr.io/rocker-org/devcontainer/r-ver:4"
 					],
 					"platforms": [
@@ -13,9 +13,9 @@
 						"linux/arm64"
 					]
 				},
-				"4.2": {
+				"4.3": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/r-ver:4.2"
+						"ghcr.io/rocker-org/devcontainer/r-ver:4.3"
 					],
 					"platforms": [
 						"linux/amd64",
@@ -29,18 +29,18 @@
 		"tidyverse": {
 			"base-image": "docker.io/rocker/tidyverse",
 			"variants": {
-				"4.3": {
+				"4.4": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/tidyverse:4.3",
+						"ghcr.io/rocker-org/devcontainer/tidyverse:4.4",
 						"ghcr.io/rocker-org/devcontainer/tidyverse:4"
 					],
 					"platforms": [
 						"linux/amd64"
 					]
 				},
-				"4.2": {
+				"4.3": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/tidyverse:4.2"
+						"ghcr.io/rocker-org/devcontainer/tidyverse:4.3"
 					],
 					"platforms": [
 						"linux/amd64"
@@ -51,18 +51,18 @@
 		"geospatial": {
 			"base-image": "docker.io/rocker/geospatial",
 			"variants": {
-				"4.3": {
+				"4.4": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/geospatial:4.3",
+						"ghcr.io/rocker-org/devcontainer/geospatial:4.4",
 						"ghcr.io/rocker-org/devcontainer/geospatial:4"
 					],
 					"platforms": [
 						"linux/amd64"
 					]
 				},
-				"4.2": {
+				"4.3": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/geospatial:4.2"
+						"ghcr.io/rocker-org/devcontainer/geospatial:4.3"
 					],
 					"platforms": [
 						"linux/amd64"
