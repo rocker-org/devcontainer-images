@@ -64,9 +64,9 @@ jobs:
           make inspect-image-all
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: tmp
+          name: tmp-${{ matrix.image_name }}-${{ matrix.variant }}
           path: tmp
 
   publish_reports:
@@ -90,10 +90,11 @@ jobs:
           path: reports
 
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: tmp
           path: tmp
+          pattern: tmp-*
+          merge-multiple: true
 
       - name: Generate reports and update wiki home
         run: |
@@ -102,7 +103,7 @@ jobs:
 
       - name: Upload artifacts
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: reports
           path: reports
