@@ -98,7 +98,7 @@ jobs:
   build-push:
     needs:
       - generate-matrix
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04${{ matrix.platform == 'linux/arm64' && '-arm' || '' }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
