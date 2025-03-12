@@ -28,11 +28,14 @@ BASE_IMAGE := $(shell jq '."$(SRC_NAME)"."$(IMAGE_NAME)"."base-image"' -r $(ARG_
 TAGS ?= $(shell jq '."$(SRC_NAME)"."$(IMAGE_NAME)"."variants"."$(VARIANT)"."tags"[]' -r $(ARG_JSON))
 PLATFORM ?= $(shell jq '."$(SRC_NAME)"."$(IMAGE_NAME)"."variants"."$(VARIANT)"."platforms" | join(",")' -r $(ARG_JSON))
 
+TAG_SUFFIX ?=
+
 # Use the `devcontainer build` command
 # ex. $ SRC_NAME=r-ver VARIANT=4.1 PLATFORM=linux/amd64 make devcontainer
 # ex. $ SRC_NAME=r-ver IMAGE_NAME=tidyverse VARIANT=4.2 DEVCON_BUILD_OPTION=--push make devcontainer
-IMAGE_NAME_OPS := $(addprefix --image-name ,$(TAGS))
-CACHE_FROM_OPS := $(addprefix --cache-from ,$(TAGS))
+FINAL_TAGS := $(addsuffix $(TAG_SUFFIX),$(TAGS))
+IMAGE_NAME_OPS := $(addprefix --image-name ,$(FINAL_TAGS))
+CACHE_FROM_OPS := $(addprefix --cache-from ,$(FINAL_TAGS))
 DEVCON_BUILD_OPTION ?=
 .PHONY: devcontainer
 devcontainer: configfiles
