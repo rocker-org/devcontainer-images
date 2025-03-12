@@ -38,7 +38,6 @@ jobs:
             rstudio: ./**/rstudio/**
 
   generate-matrix:
-    if: ${{ github.event_name != 'pull_request' }}
     runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -126,4 +125,4 @@ jobs:
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
           DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
-          make devcontainer
+          make devcontainer ${{ github.event_name == 'pull_request' && '--dry-run' || '' }}
