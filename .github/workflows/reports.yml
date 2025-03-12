@@ -11,6 +11,7 @@ on:
       - main
     paths:
       - build/reports/*.Rmd
+      - .github/workflows/reports.yml
   workflow_run:
     workflows:
       - Build and push images
