@@ -11,6 +11,7 @@ on:
       - main
     paths:
       - build/reports/*.Rmd
+      - .github/workflows/reports.yml
   workflow_run:
     workflows:
       - Build and push images
@@ -38,7 +39,7 @@ jobs:
           echo ${jsonfile}
       - id: set-matrix
         run: |
-          jsoncontent=$(jq -r 'tostring' ${{ steps.set-json.outputs.json }})
+          jsoncontent=$(jq -r '.include |= map(select(.platform == "linux/amd64")) | tostring' ${{ steps.set-json.outputs.json }})
           echo "matrix=${jsoncontent}" >>"$GITHUB_OUTPUT"
           echo "${jsoncontent}"
 
