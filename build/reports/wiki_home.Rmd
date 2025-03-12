@@ -73,7 +73,7 @@ df_all <- df_args |>
   invisible()
 }
 
-purrr::walk2(df_current$id, df_current$report_name, .rename_report)
+purrr::walk2(df_all$id, df_all$report_name, .rename_report)
 ```
 
 ```{r}
