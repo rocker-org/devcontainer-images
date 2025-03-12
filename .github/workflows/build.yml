@@ -26,7 +26,7 @@ concurrency:
 jobs:
   detect-changes:
     if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       src: ${{ steps.filter.outputs.changes }}
     steps:
@@ -38,8 +38,7 @@ jobs:
             rstudio: ./**/rstudio/**
 
   generate-matrix:
-    if: ${{ github.event_name != 'pull_request' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -58,7 +57,7 @@ jobs:
   generate-matrix-pr:
     needs:
       - detect-changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -66,7 +65,7 @@ jobs:
       - id: set-json
         run: |
           jsonfile="build/matrix.json"
-          echo ::set-output name=json::${jsonfile}
+          echo "json=${jsonfile}" >>"$GITHUB_OUTPUT"
           echo ${jsonfile}
       - id: set-matrix
         run: |
@@ -78,7 +77,7 @@ jobs:
   build-pr:
     needs:
       - generate-matrix-pr
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04${{ matrix.platform == 'linux/arm64' && '-arm' || '' }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix-pr.outputs.matrix) }}
@@ -87,10 +86,10 @@ jobs:
       - name: Set up devcontainer cli
         run: npm install -g @devcontainers/cli
       - name: Test build
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && matrix.platform == 'linux/amd64' }}
         run: |
           GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
-          PLATFORM=linux/amd64 \
+          PLATFORM=${{ matrix.platform }} \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
@@ -99,7 +98,7 @@ jobs:
   build-push:
     needs:
       - generate-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
@@ -111,17 +110,40 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Set up devcontainer cli
         run: npm install -g @devcontainers/cli
+      - name: Prep tag suffix
+        id: tag-suffix
+        run: |
+          suffix="$(echo ${{ matrix.platform }} | sed 's|linux/|-|')"
+          echo "suffix=${suffix}" >>"${GITHUB_OUTPUT}"
       - name: Build and push Docker images
         run: |
           GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+          PLATFORM=${{ matrix.platform }} \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
+          TAG_SUFFIX=${{ matrix.image_name == 'r-ver' && steps.tag-suffix.outputs.suffix || '' }} \
           DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
-          make devcontainer
+          make devcontainer ${{ github.event_name == 'pull_request' && '--dry-run' || '' }}
+
+  merge:
+    needs:
+      - build-push
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create manifest list and push
+        run: |
+          SRC_NAME=r-ver \
+          IMAGE_NAME=r-ver \
+          VARIANT=4.4 \
+          DRY_RUN=${{ github.event_name == 'pull_request' && '--dry-run' || '' }} \
+          make imagetools-create
