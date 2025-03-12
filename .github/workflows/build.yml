@@ -26,7 +26,7 @@ concurrency:
 jobs:
   detect-changes:
     if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       src: ${{ steps.filter.outputs.changes }}
     steps:
@@ -39,7 +39,7 @@ jobs:
 
   generate-matrix:
     if: ${{ github.event_name != 'pull_request' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -58,7 +58,7 @@ jobs:
   generate-matrix-pr:
     needs:
       - detect-changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -66,7 +66,7 @@ jobs:
       - id: set-json
         run: |
           jsonfile="build/matrix.json"
-          echo ::set-output name=json::${jsonfile}
+          echo "json=${jsonfile}" >>"$GITHUB_OUTPUT"
           echo ${jsonfile}
       - id: set-matrix
         run: |
@@ -78,7 +78,7 @@ jobs:
   build-pr:
     needs:
       - generate-matrix-pr
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04${{ matrix.platform == 'linux/arm64' && '-arm' || '' }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix-pr.outputs.matrix) }}
@@ -90,7 +90,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         run: |
           GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
-          PLATFORM=linux/amd64 \
+          PLATFORM=${{ matrix.platform }} \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
@@ -99,7 +99,7 @@ jobs:
   build-push:
     needs:
       - generate-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
@@ -117,9 +117,11 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Set up devcontainer cli
         run: npm install -g @devcontainers/cli
+        # TODO: for r-ver, use `push-by-digest=true`
       - name: Build and push Docker images
         run: |
           GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+          PLATFORM=${{ matrix.platform }} \
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
