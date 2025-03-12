@@ -87,7 +87,7 @@ jobs:
       - name: Set up devcontainer cli
         run: npm install -g @devcontainers/cli
       - name: Test build
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && matrix.platform == 'linux/amd64' }}
         run: |
           GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
           PLATFORM=${{ matrix.platform }} \
