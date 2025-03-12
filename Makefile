@@ -75,6 +75,20 @@ $(WORK_DIR)/meta.env:
 configfiles: $(WORK_DIR)/.devcontainer.json $(addprefix $(WORK_DIR)/,$(notdir $(DOCKERFILE))) $(addprefix $(WORK_DIR)/assets/,$(notdir $(ASSETS)))
 
 ################################################################################
+# Create manifest
+################################################################################
+TAG_OPTS := $(addprefix --tag ,$(FINAL_TAGS))
+SOURCE_IMAGES_AMD64 := $(addsuffix -amd64,$(TAGS))
+SOURCE_IMAGES_ARM64 := $(addsuffix -arm64,$(TAGS))
+SOURCE_IMAGES := $(SOURCE_IMAGES_AMD64) $(SOURCE_IMAGES_ARM64)
+DRY_RUN ?= --dry-run
+imagetools-create:
+	docker buildx imagetools create \
+	$(TAG_OPTS) \
+	$(DRY_RUN) \
+	$(SOURCE_IMAGES)
+
+################################################################################
 # Tests
 ################################################################################
 
