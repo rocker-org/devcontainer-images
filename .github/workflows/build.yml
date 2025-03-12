@@ -112,7 +112,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up devcontainer cli
         run: npm install -g @devcontainers/cli
-        # TODO: for r-ver, use `push-by-digest=true`
+      - name: Prep tag suffix
+        id: tag-suffix
+        run: |
+          suffix="$(echo ${{ matrix.platform }} | sed 's|linux/|-|')"
+          echo "suffix=${suffix}" >>"${GITHUB_OUTPUT}"
       - name: Build and push Docker images
         run: |
           GIT_REPOSITORY="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
@@ -120,5 +124,6 @@ jobs:
           SRC_NAME=${{ matrix.src_name }} \
           IMAGE_NAME=${{ matrix.image_name }} \
           VARIANT=${{ matrix.variant }} \
+          TAG_SUFFIX=${{ matrix.image_name == 'r-ver' && steps.tag-suffix.outputs.suffix || '' }} \
           DEVCON_BUILD_OPTION=--push\ ${{ inputs.push }} \
           make devcontainer ${{ github.event_name == 'pull_request' && '--dry-run' || '' }}
