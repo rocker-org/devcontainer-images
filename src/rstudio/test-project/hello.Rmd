@@ -7,5 +7,5 @@ output:
 ---
 
 ```{r}
-cat("Hello World")
+cat("Hello World!")
 ```
