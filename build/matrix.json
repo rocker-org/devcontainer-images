@@ -3,25 +3,25 @@
 		{
 			"src_name": "r-ver",
 			"image_name": "r-ver",
-			"variant": "4.4",
+			"variant": "4.5",
 			"platform": "linux/amd64"
 		},
 		{
 			"src_name": "r-ver",
 			"image_name": "r-ver",
-			"variant": "4.4",
+			"variant": "4.5",
 			"platform": "linux/arm64"
 		},
 		{
 			"src_name": "rstudio",
 			"image_name": "tidyverse",
-			"variant": "4.4",
+			"variant": "4.5",
 			"platform": "linux/amd64"
 		},
 		{
 			"src_name": "rstudio",
 			"image_name": "geospatial",
-			"variant": "4.4",
+			"variant": "4.5",
 			"platform": "linux/amd64"
 		}
 	]
