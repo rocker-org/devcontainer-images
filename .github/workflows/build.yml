@@ -144,6 +144,6 @@ jobs:
         run: |
           SRC_NAME=r-ver \
           IMAGE_NAME=r-ver \
-          VARIANT=4.4 \
+          VARIANT=4.5 \
           DRY_RUN=${{ github.event_name == 'pull_request' && '--dry-run' || '' }} \
           make imagetools-create
