@@ -9,6 +9,13 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {},
+		// Temporary workaround for httpgd removal from cran
+		// See https://github.com/nx10/httpgd/issues/218
+		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
+			"packages": "httpgd",
+			"additionalRepositories": "rmv = 'https://community.r-multiverse.org'",
+			"installSystemRequirements": true
+		},
 		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
 			"version": "none",
 			"vscodeRSupport": "full",
@@ -20,7 +27,9 @@
 		}
 	},
 	"overrideFeatureInstallOrder": [
-		"ghcr.io/devcontainers/features/common-utils"
+		"ghcr.io/devcontainers/features/common-utils",
+		"ghcr.io/rocker-org/devcontainer-features/r-packages",
+		"ghcr.io/rocker-org/devcontainer-features/r-rig"
 	],
 	"remoteUser": "rstudio",
 	"customizations": {
