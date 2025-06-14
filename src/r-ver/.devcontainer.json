@@ -25,9 +25,7 @@
 		}
 	},
 	"overrideFeatureInstallOrder": [
-		"ghcr.io/devcontainers/features/common-utils",
-		"ghcr.io/rocker-org/devcontainer-features/r-packages",
-		"ghcr.io/rocker-org/devcontainer-features/r-rig"
+		"ghcr.io/devcontainers/features/common-utils"
 	],
 	"remoteUser": "rstudio",
 	"customizations": {
