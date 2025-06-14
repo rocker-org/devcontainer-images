@@ -9,8 +9,6 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {},
-		// Temporary workaround for httpgd removal from cran
-		// See https://github.com/nx10/httpgd/issues/218
 		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
 			"packages": "httpgd",
 			"additionalRepositories": "rmv = 'https://community.r-multiverse.org'",
