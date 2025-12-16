@@ -65,7 +65,7 @@ jobs:
           make inspect-image-all
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: tmp-${{ matrix.image_name }}-${{ matrix.variant }}
           path: tmp
@@ -104,7 +104,7 @@ jobs:
 
       - name: Upload artifacts
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: reports
           path: reports
