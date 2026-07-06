@@ -3,9 +3,9 @@
 		"r-ver": {
 			"base-image": "docker.io/rocker/r-ver",
 			"variants": {
-				"4.5": {
+				"4.6": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/r-ver:4.5",
+						"ghcr.io/rocker-org/devcontainer/r-ver:4.6",
 						"ghcr.io/rocker-org/devcontainer/r-ver:4"
 					],
 					"platforms": [
@@ -20,9 +20,9 @@
 		"tidyverse": {
 			"base-image": "docker.io/rocker/tidyverse",
 			"variants": {
-				"4.5": {
+				"4.6": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/tidyverse:4.5",
+						"ghcr.io/rocker-org/devcontainer/tidyverse:4.6",
 						"ghcr.io/rocker-org/devcontainer/tidyverse:4"
 					],
 					"platforms": [
@@ -34,9 +34,9 @@
 		"geospatial": {
 			"base-image": "docker.io/rocker/geospatial",
 			"variants": {
-				"4.5": {
+				"4.6": {
 					"tags": [
-						"ghcr.io/rocker-org/devcontainer/geospatial:4.5",
+						"ghcr.io/rocker-org/devcontainer/geospatial:4.6",
 						"ghcr.io/rocker-org/devcontainer/geospatial:4"
 					],
 					"platforms": [
