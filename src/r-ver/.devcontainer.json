@@ -14,7 +14,7 @@
 			"additionalRepositories": "rmv = 'https://community.r-multiverse.org'",
 			"installSystemRequirements": true
 		},
-		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
+		"ghcr.io/rocker-org/devcontainer-features/r-rig:2": {
 			"version": "none",
 			"vscodeRSupport": "lsp",
 			"installDevTools": true,
