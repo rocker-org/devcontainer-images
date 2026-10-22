@@ -3,7 +3,7 @@
 	"features": {
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
 		"ghcr.io/devcontainers/features/node:2": {},
-		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
+		"ghcr.io/rocker-org/devcontainer-features/r-packages:2": {
 			"packages": "dplyr,tidyr,readr,lubridate"
 		}
 	},
