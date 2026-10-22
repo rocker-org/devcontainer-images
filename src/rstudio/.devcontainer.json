@@ -9,7 +9,7 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {},
-		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
+		"ghcr.io/rocker-org/devcontainer-features/r-packages:2": {
 			"packages": "httpgd",
 			"additionalRepositories": "rmv = 'https://community.r-multiverse.org'",
 			"installSystemRequirements": true
