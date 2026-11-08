@@ -17,6 +17,10 @@
 			"installREnv": true,
 			"installRMarkdown": true,
 			"arfVersion": "latest"
+		},
+		"ghcr.io/rocker-org/devcontainer-features/r-packages:2": {
+			"packages": "httpgd",
+			"additionalRepositories": "rmv = 'https://community.r-multiverse.org'"
 		}
 	},
 	"overrideFeatureInstallOrder": [
