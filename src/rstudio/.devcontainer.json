@@ -9,19 +9,14 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {},
-		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
-			"packages": "httpgd",
-			"additionalRepositories": "rmv = 'https://community.r-multiverse.org'",
-			"installSystemRequirements": true
-		},
-		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
+		"ghcr.io/rocker-org/devcontainer-features/pandoc:1": {},
+		"ghcr.io/rocker-org/devcontainer-features/r-rig:2": {
 			"version": "none",
 			"vscodeRSupport": "lsp",
 			"installDevTools": true,
 			"installREnv": true,
 			"installRMarkdown": true,
-			"installRadian": true,
-			"installVscDebugger": true
+			"arfVersion": "latest"
 		}
 	},
 	"overrideFeatureInstallOrder": [
@@ -30,11 +25,9 @@
 	"remoteUser": "rstudio",
 	"customizations": {
 		"vscode": {
-			"extensions": ["RDebugger.r-debugger"],
 			"settings": {
-				"r.rterm.linux": "/usr/local/bin/radian",
-				"r.bracketedPaste": true,
-				"r.plot.useHttpgd": true
+				"r.consolePath": "arf",
+				"r.bracketedPaste": true
 			}
 		}
 	}
